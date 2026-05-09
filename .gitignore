@@ -3,8 +3,8 @@
 *.test
 *.prof
 bin/
-go-http-server
-server
+/go-http-server
+/server
 
 # Cgo / shared libraries
 *.o
