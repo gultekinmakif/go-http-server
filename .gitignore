@@ -1,0 +1,28 @@
+# Binaries
+*.exe
+*.test
+*.prof
+bin/
+go-http-server
+server
+
+# Cgo / shared libraries
+*.o
+*.a
+*.so
+
+# Go build cache
+.gocache/
+
+# Editor
+*.swp
+*.swo
+*.un~
+.DS_Store
+
+# Tooling
+.claude/
+
+# Environment
+.env
+.*.env
