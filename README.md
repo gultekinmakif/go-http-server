@@ -1,4 +1,6 @@
 # go-http-server
+[![Go Report Card](https://goreportcard.com/badge/github.com/gultekinmakif/go-http-server)](https://goreportcard.com/report/github.com/gultekinmakif/go-http-server)
+
 
 Minimal Go HTTP server template using `net/http`.
 
