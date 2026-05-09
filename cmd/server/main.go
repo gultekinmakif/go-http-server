@@ -6,6 +6,9 @@ import (
 	"os"
 )
 
+func roothandler(res http.ResponseWriter, req *http.Request)   {}
+func healthHandler(res http.ResponseWriter, req *http.Request) {}
+
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -14,7 +17,9 @@ func main() {
 
 	log.Printf("server listening on %s", port)
 
-	if err := http.ListenAndServe(":"+port, nil); err != nil {
-		log.Fatal(err)
-	}
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", roothandler)
+	mux.HandleFunc("/health", healthHandler)
+
+	http.ListenAndServe(":"+port, mux)
 }
