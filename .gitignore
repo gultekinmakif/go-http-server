@@ -14,6 +14,9 @@ bin/
 # Go build cache
 .gocache/
 
+# Logs
+tmp/
+
 # Editor
 *.swp
 *.swo

@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"log/slog"
 	"net/http"
 
 	"github.com/gultekinmakif/go-http-server/internal/config"
@@ -17,18 +18,19 @@ func main() {
 		log.Fatal(err)
 	}
 
-	_l, err := logger.New(cfg)
+	_logger, err := logger.New(cfg)
 	if err != nil {
 		log.Fatal(err)
 	}
+	slog.SetDefault(_logger)
 
-	_l.Info("server listening", "port", cfg.Port, "env", cfg.Env)
+	slog.Info("server listening", "port", cfg.Port, "env", cfg.Env)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", roothandler)
 	mux.HandleFunc("/health", healthHandler)
 
 	if err := http.ListenAndServe(":"+cfg.Port, mux); err != nil {
-		_l.Error("server error", "error", err)
+		slog.Error("server error", "error", err)
 	}
 }
