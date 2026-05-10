@@ -1,14 +1,15 @@
 package main
 
 import (
+	"context"
 	"log"
 	"log/slog"
-	"net/http"
+	"os/signal"
+	"syscall"
 
 	"github.com/gultekinmakif/go-http-server/internal/config"
-	"github.com/gultekinmakif/go-http-server/internal/handlers"
 	"github.com/gultekinmakif/go-http-server/internal/logger"
-	"github.com/gultekinmakif/go-http-server/internal/middleware"
+	"github.com/gultekinmakif/go-http-server/internal/server"
 )
 
 func main() {
@@ -17,21 +18,17 @@ func main() {
 		log.Fatal(err)
 	}
 
-	_logger, err := logger.New(cfg)
+	lg, err := logger.New(cfg)
 	if err != nil {
 		log.Fatal(err)
 	}
-	slog.SetDefault(_logger)
+	slog.SetDefault(lg)
 
-	slog.Info("server listening", "port", cfg.Port, "env", cfg.Env)
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", handlers.Root)
-	mux.HandleFunc("/health", handlers.Health)
-
-	router := middleware.Recoverer(middleware.RequestID(middleware.Logger(mux)))
-
-	if err := http.ListenAndServe(":"+cfg.Port, router); err != nil {
+	srv := server.New(cfg)
+	if err := srv.Start(ctx); err != nil {
 		slog.Error("server error", "error", err)
 	}
 }

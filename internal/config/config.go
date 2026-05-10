@@ -5,12 +5,14 @@ import (
 	"log/slog"
 	"os"
 	"strconv"
+	"time"
 )
 
 type Config struct {
-	Port     string
-	Env      string // dev or prod
-	LogLevel slog.Level
+	Port            string
+	Env             string // dev or prod
+	LogLevel        slog.Level
+	ShutdownTimeout time.Duration
 }
 
 func getEnv(key string, fallback string) string {
@@ -38,6 +40,12 @@ func Load() (*Config, error) {
 	if err := cfg.LogLevel.UnmarshalText([]byte(logEnv)); err != nil {
 		return nil, fmt.Errorf("invalid LOG_LEVEL: %w", err)
 	}
+
+	d, err := time.ParseDuration(getEnv("SHUTDOWN_TIMEOUT", "10s"))
+	if err != nil {
+		return nil, fmt.Errorf("invalid SHUTDOWN_TIMEOUT: %w", err)
+	}
+	cfg.ShutdownTimeout = d
 
 	return cfg, nil
 }
