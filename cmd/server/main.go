@@ -31,7 +31,7 @@ func main() {
 	mux.HandleFunc("/", roothandler)
 	mux.HandleFunc("/health", healthHandler)
 
-	router := middleware.Recovery(middleware.RequestID(middleware.Logger(mux)))
+	router := middleware.Recoverer(middleware.RequestID(middleware.Logger(mux)))
 
 	if err := http.ListenAndServe(":"+cfg.Port, router); err != nil {
 		slog.Error("server error", "error", err)
