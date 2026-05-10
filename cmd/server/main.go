@@ -7,6 +7,7 @@ import (
 
 	"github.com/gultekinmakif/go-http-server/internal/config"
 	"github.com/gultekinmakif/go-http-server/internal/logger"
+	"github.com/gultekinmakif/go-http-server/internal/middleware"
 )
 
 func roothandler(res http.ResponseWriter, req *http.Request)   {}
@@ -30,7 +31,9 @@ func main() {
 	mux.HandleFunc("/", roothandler)
 	mux.HandleFunc("/health", healthHandler)
 
-	if err := http.ListenAndServe(":"+cfg.Port, mux); err != nil {
+	router := middleware.Recovery(middleware.RequestID(middleware.Logger(mux)))
+
+	if err := http.ListenAndServe(":"+cfg.Port, router); err != nil {
 		slog.Error("server error", "error", err)
 	}
 }
