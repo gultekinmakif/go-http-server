@@ -8,6 +8,7 @@ import (
 
 	"github.com/gultekinmakif/go-http-server/internal/db/postgres"
 	"github.com/gultekinmakif/go-http-server/internal/models"
+	"github.com/gultekinmakif/go-http-server/internal/utils"
 	"gorm.io/gorm"
 )
 
@@ -63,7 +64,8 @@ func GetPost(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "internal error", http.StatusInternalServerError)
 		return
 	}
-	writeJSON(w, http.StatusOK, p)
+
+	writeJSON(w, http.StatusOK, p.Sanitize())
 }
 
 // GetAllPost handles GET /posts.
@@ -75,5 +77,9 @@ func GetAllPost(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "internal error", http.StatusInternalServerError)
 		return
 	}
-	writeJSON(w, http.StatusOK, posts)
+	writeJSON(w, http.StatusOK, utils.Map(posts, SanitizeAll))
+}
+
+func SanitizeAll(P models.Post) models.PostContent {
+	return P.Sanitize()
 }
