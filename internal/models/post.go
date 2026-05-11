@@ -11,9 +11,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// ErrSlugEmpty is returned by PickAvailableSlug when the title contains no
-// alphanumeric characters and thus can't produce a usable slug. Callers
-// should map this to a 400; any other error is an internal failure (500).
+// ErrSlugEmpty is when generated slug (from title) is emp
 var ErrSlugEmpty = errors.New("title must contain at least one alphanumeric character")
 
 var (
