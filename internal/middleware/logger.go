@@ -9,7 +9,7 @@ import (
 func Logger(next http.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
-		rw := &statusRecorder{ResponseWriter: w, status: 200}
+		rw := &statusRecorder{ResponseWriter: w, status: http.StatusOK}
 		next.ServeHTTP(rw, r)
 		slog.Info("request",
 			"method", r.Method,

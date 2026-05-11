@@ -54,13 +54,17 @@ func init() {
 }
 
 // RequestID is a middleware that injects a request ID into the context of each
-// request. A request ID is a string of the form "host.example.com/random-0001",
-// where "random" is a base62 random string that uniquely identifies this go
-// process, and where the last number is an atomically incremented request
-// counter.
+// request. If the incoming request carries an X-Request-ID header (e.g. from
+// an upstream LB or gateway), it is preserved; otherwise a new ID is
+// generated of the form "host.example.com/random-0001", where "random" is a
+// base62 random string that uniquely identifies this go process, and where
+// the last number is an atomically incremented request counter.
 func RequestID(next http.Handler) http.HandlerFunc {
 	fn := func(w http.ResponseWriter, r *http.Request) {
-		id := fmt.Sprintf("%s-%06d", prefix, atomic.AddUint64(&reqid, 1))
+		id := r.Header.Get(RequestIDHeader)
+		if id == "" {
+			id = fmt.Sprintf("%s-%06d", prefix, atomic.AddUint64(&reqid, 1))
+		}
 		w.Header().Set(RequestIDHeader, id)
 		ctx := context.WithValue(r.Context(), RequestIDKey, id)
 		next.ServeHTTP(w, r.WithContext(ctx))

@@ -9,10 +9,10 @@ import (
 
 // Post is the canonical content entity behind /posts/{slug}.
 type Post struct {
-	ID    uuid.UUID `gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
+	ID    uuid.UUID `gorm:"primaryKey;type:uuid;default:gen_random_uuid()" json:"id"`
 	Slug  string    `gorm:"type:text;not null;uniqueIndex"  json:"slug"`
-	Title string    `gorm:"type:text;not null;uniqueIndex"   json:"title"`
-	Body  string    `gorm:"type:text;not null;uniqueIndex"  json:"body"`
+	Title string    `gorm:"type:text;not null"  json:"title"`
+	Body  string    `gorm:"type:text;not null"  json:"body"`
 
 	// Auto-managed by GORM.
 	CreatedAt time.Time      `json:"created_at"`

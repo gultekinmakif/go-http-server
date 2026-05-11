@@ -14,7 +14,6 @@ import (
 )
 
 func main() {
-	defer postgres.Close()
 
 	cfg, err := config.Load()
 	if err != nil {
@@ -28,11 +27,15 @@ func main() {
 	slog.SetDefault(lg)
 
 	if err := postgres.New(cfg.DatabaseURL); err != nil {
-		log.Fatal(err)
+		slog.Error("database connection error", "error", err)
+		return
+
 	}
+	defer postgres.Close()
 
 	if err := postgres.Migrate(); err != nil {
-		log.Fatal(err)
+		slog.Error("database migration error", "error", err)
+		return
 	}
 
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
@@ -41,5 +44,6 @@ func main() {
 	srv := server.New(cfg)
 	if err := srv.Start(ctx); err != nil {
 		slog.Error("server error", "error", err)
+		return
 	}
 }
