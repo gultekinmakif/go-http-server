@@ -46,6 +46,9 @@ paths:
     get:
       tags: [posts]
       summary: List all posts
+      description: |
+        Returns the public projection (slug/title/body only); id and
+        timestamps are intentionally stripped from list responses.
       responses:
         '200':
           description: OK
@@ -54,12 +57,16 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Post'
+                  $ref: '#/components/schemas/PostContent'
         '500':
           $ref: '#/components/responses/InternalError'
     post:
       tags: [posts]
       summary: Create a post
+      description: |
+        Create response is the full record (id, timestamps included) — useful
+        as a receipt so the client can deep-link to the new resource. Reads
+        return the projection only; see `GET /posts/{slug}`.
       requestBody:
         required: true
         content:
@@ -93,6 +100,7 @@ paths:
     get:
       tags: [posts]
       summary: Get a post by slug
+      description: Returns the public projection (slug/title/body only).
       parameters:
         - name: slug
           in: path
@@ -105,7 +113,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Post'
+                $ref: '#/components/schemas/PostContent'
         '404':
           description: Not found
           content:
@@ -126,9 +134,28 @@ components:
           type: string
           example: ok
 
+    PostContent:
+      type: object
+      required: [slug, title, body]
+      description: |
+        Public projection of a Post. What `GET /posts` and `GET /posts/{slug}`
+        return — id and timestamps are stripped.
+      properties:
+        slug:
+          type: string
+          example: my-first-post
+        title:
+          type: string
+          example: My first post
+        body:
+          type: string
+
     Post:
       type: object
       required: [id, slug, title, body, created_at, updated_at]
+      description: |
+        Full post record including DB-managed fields. Currently only returned
+        by `POST /posts` as a creation receipt; reads use `PostContent`.
       properties:
         id:
           type: string

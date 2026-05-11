@@ -39,7 +39,8 @@ make help
 | `GET` | `/posts` | List all posts |
 | `GET` | `/posts/{slug}` | Read by slug. 404 on miss. |
 
-Full contract in [api/openapi.yaml](api/openapi.yaml).
+See docs at [gultekinmakif.github.io/go-http-server](https://gultekinmakif.github.io/go-http-server/).
+
 
 ## Configuration
 

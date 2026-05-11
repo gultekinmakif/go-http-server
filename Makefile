@@ -1,4 +1,4 @@
-.PHONY: run dev build test lint tidy docker-build docker-up docker-down clean help
+.PHONY: run dev build test lint tidy docs docker-build docker-up docker-down clean help
 .DEFAULT_GOAL := help
 
 BIN := bin/server
@@ -21,6 +21,9 @@ lint: ## Run golangci-lint
 
 tidy: ## Tidy go.mod / go.sum
 	go mod tidy
+
+docs: ## Render api/openapi.yaml to docs/index.html (Redoc) for GitHub Pages
+	npx --yes @redocly/cli build-docs api/openapi.yaml -o docs/index.html
 
 docker-build: ## Build the Docker image (tag: go-http-server:dev)
 	docker build -t go-http-server:dev .
