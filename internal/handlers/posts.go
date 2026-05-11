@@ -23,7 +23,7 @@ type createPostRequest struct {
 // Body: {"title":"...","body":"...","slug":"..."}.
 // 201 with the created post on success, 400 on bad body, 500 on db error.
 func CreatePost(w http.ResponseWriter, r *http.Request) {
-	defer r.Body.Close()
+	defer func() { _ = r.Body.Close() }()
 
 	var body createPostRequest
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {

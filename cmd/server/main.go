@@ -31,7 +31,11 @@ func main() {
 		return
 
 	}
-	defer postgres.Close()
+	defer func() {
+		if err := postgres.Close(); err != nil {
+			slog.Error("postgres close failed", "error", err)
+		}
+	}()
 
 	if err := postgres.Migrate(); err != nil {
 		slog.Error("database migration error", "error", err)
