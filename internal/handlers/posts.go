@@ -46,7 +46,7 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "post creation failed", http.StatusBadRequest)
 		return
 	}
-	writeJSON(w, http.StatusCreated, p)
+	writeJSON(w, http.StatusCreated, p.Content())
 }
 
 // GetPost handles GET /posts/{slug}.
@@ -65,7 +65,7 @@ func GetPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	writeJSON(w, http.StatusOK, p.Sanitize())
+	writeJSON(w, http.StatusOK, p.Content())
 }
 
 // GetAllPost handles GET /posts.
@@ -77,9 +77,6 @@ func GetAllPost(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "internal error", http.StatusInternalServerError)
 		return
 	}
-	writeJSON(w, http.StatusOK, utils.Map(posts, SanitizeAll))
-}
 
-func SanitizeAll(P models.Post) models.PostContent {
-	return P.Sanitize()
+	writeJSON(w, http.StatusOK, utils.Map(posts, models.Post.Content))
 }
