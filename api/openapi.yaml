@@ -179,17 +179,14 @@ components:
 
     CreatePostRequest:
       type: object
-      required: [title, body, slug]
+      required: [title, body]
+      description: |
+        Slug is derived server-side from the title
       properties:
         title:
           type: string
         body:
           type: string
-        slug:
-          type: string
-          description: |
-            Client-supplied URL slug. Unique across all (non-deleted) posts.
-            Future: derived from title server-side; for now, sent by the client.
 
   responses:
     InternalError:

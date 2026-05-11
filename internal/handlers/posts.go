@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/gultekinmakif/go-http-server/internal/db/postgres"
 	"github.com/gultekinmakif/go-http-server/internal/models"
 	"github.com/gultekinmakif/go-http-server/internal/utils"
@@ -16,11 +17,10 @@ import (
 type createPostRequest struct {
 	Title string `json:"title"`
 	Body  string `json:"body"`
-	Slug  string `json:"slug"`
 }
 
 // CreatePost handles POST /posts.
-// Body: {"title":"...","body":"...","slug":"..."}.
+// Body: {"title":"...","body":"..."}.
 // 201 with the created post on success, 400 on bad body, 500 on db error.
 func CreatePost(w http.ResponseWriter, r *http.Request) {
 	defer func() { _ = r.Body.Close() }()
@@ -35,13 +35,16 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if body.Slug == "" {
-		http.Error(w, "slug is required", http.StatusBadRequest)
+	db := postgres.Get().WithContext(r.Context())
+	slug, err := models.PickAvailableSlug(db, body.Title, uuid.Nil)
+	if err != nil {
+		slog.Error("pick slug failed", "err", err)
+		http.Error(w, "internal error", http.StatusInternalServerError)
 		return
 	}
 
-	p := models.Post{Title: body.Title, Body: body.Body, Slug: body.Slug}
-	if err := postgres.Get().WithContext(r.Context()).Create(&p).Error; err != nil {
+	p := models.Post{Title: body.Title, Body: body.Body, Slug: slug}
+	if err := db.Create(&p).Error; err != nil {
 		slog.Error("post creation failed", "err", err)
 		http.Error(w, "post creation failed", http.StatusBadRequest)
 		return
