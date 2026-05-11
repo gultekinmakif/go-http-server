@@ -33,7 +33,8 @@ Standard library `net/http` with:
    go mod tidy
    ```
 
-3. Replace `@gultekinmakif` in [.github/CODEOWNERS](.github/CODEOWNERS) with your handle, then import the branch-protection ruleset (one-time, per repo):
+3. Replace `@gultekinmakif` in [.github/CODEOWNERS](.github/CODEOWNERS) with your handle
+4. Import the branch-protection ruleset (one-time, per repo):
 
    ```sh
    sed -i '' 's/@gultekinmakif/@<your-handle>/' .github/CODEOWNERS
@@ -42,7 +43,7 @@ Standard library `net/http` with:
      --input <(jq 'del(.id, .source, .source_type)' .github/rulesets/pr-protection.json)
    ```
 
-After that, `make docker-up` and you're done.
+After that, `make docker-up` and you're running.
 
 ## Quick start
 
