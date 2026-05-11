@@ -3,19 +3,16 @@ package models
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 // Post is the canonical content entity behind /posts/{slug}.
-//
-// Slug is left empty by Create handlers for now — slug derivation (from
-// Title) is intentionally a TODO. When implemented, add a `uniqueIndex` on
-// Slug and enforce non-empty in handlers.
 type Post struct {
-	ID    uint   `gorm:"primaryKey" json:"id"`
-	Slug  string `gorm:"type:text"  json:"slug"` // TODO uniqueIndex once slug derivation lands
-	Title string `gorm:"not null"   json:"title"`
-	Body  string `gorm:"type:text"  json:"body"`
+	ID    uuid.UUID `gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
+	Slug  string    `gorm:"type:text;not null;uniqueIndex"  json:"slug"`
+	Title string    `gorm:"type:text;not null;uniqueIndex"   json:"title"`
+	Body  string    `gorm:"type:text;not null;uniqueIndex"  json:"body"`
 
 	// Auto-managed by GORM.
 	CreatedAt time.Time      `json:"created_at"`
