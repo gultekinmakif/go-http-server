@@ -19,12 +19,14 @@ Standard library `net/http` with:
 
 ## Use this template
 
-Create a new repo from this template (or click "Use this template" in the UI):
+1. Create a new repo from this template (or click "Use this template" in the UI):
 ```sh
 gh repo create my-go-server --template gultekinmakif/go-http-server --private --clone
 cd my-go-server
 
-# 2. Rename the module path + DB name + Docker tag in one shot
+```
+# 2. Rename the module path + DB name + Docker tag in one shot:
+```sh
 ./scripts/init-template.sh github.com/<you>/my-go-server
 go mod tidy
 ```
