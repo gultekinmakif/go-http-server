@@ -17,5 +17,5 @@ type Post struct {
 	// Auto-managed by GORM.
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"` // soft delete — auto-filtered on queries
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"` // soft delete - auto-filtered on queries
 }
