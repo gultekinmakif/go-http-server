@@ -1,7 +1,7 @@
-# go-http-server
+# Template: go-http-server
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/gultekinmakif/go-http-server)](https://goreportcard.com/report/github.com/gultekinmakif/go-http-server)
 [![Template](https://img.shields.io/badge/template-use%20this-2ea44f)](https://github.com/gultekinmakif/go-http-server/generate)
+[![Go Report Card](https://goreportcard.com/badge/github.com/gultekinmakif/go-http-server)](https://goreportcard.com/report/github.com/gultekinmakif/go-http-server)
 
 > **This is a GitHub template.** Click **"Use this template"** at the top of the repo (or the badge above) to spin up a fresh service. See [Use this template](#use-this-template) below for the one-command rename.
 
