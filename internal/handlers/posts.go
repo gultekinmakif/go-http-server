@@ -34,6 +34,10 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "title is required", http.StatusBadRequest)
 		return
 	}
+	if models.GenerateSlug(body.Title) == "" {
+		http.Error(w, models.ErrSlugEmpty.Error(), http.StatusBadRequest)
+		return
+	}
 
 	db := postgres.Get().WithContext(r.Context())
 	slug, err := models.PickAvailableSlug(db, body.Title, uuid.Nil)

@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 	"regexp"
 	"strings"
@@ -9,6 +10,11 @@ import (
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
+
+// ErrSlugEmpty is returned by PickAvailableSlug when the title contains no
+// alphanumeric characters and thus can't produce a usable slug. Callers
+// should map this to a 400; any other error is an internal failure (500).
+var ErrSlugEmpty = errors.New("title must contain at least one alphanumeric character")
 
 var (
 	slugInvalidChars = regexp.MustCompile(`[^a-z0-9]+`)
@@ -52,8 +58,7 @@ func PickAvailableSlug(db *gorm.DB, title string, selfID uuid.UUID) (string, err
 	base := GenerateSlug(title)
 
 	if base == "" {
-		return "", fmt.Errorf("title must contain at least one alphanumeric character")
-
+		return "", ErrSlugEmpty
 	}
 
 	if slugUUIDPattern.MatchString(base) {
