@@ -20,18 +20,29 @@ Standard library `net/http` with:
 ## Use this template
 
 1. Create a new repo from this template (or click "Use this template" in the UI):
-```sh
-gh repo create my-go-server --template gultekinmakif/go-http-server --private --clone
-cd my-go-server
 
-```
-# 2. Rename the module path + DB name + Docker tag in one shot:
-```sh
-./scripts/init-template.sh github.com/<you>/my-go-server
-go mod tidy
-```
+   ```sh
+   gh repo create my-go-server --template gultekinmakif/go-http-server --private --clone
+   cd my-go-server
+   ```
 
-After that, `make docker-up` and you're running.
+2. Rename the module path + DB name + Docker tag:
+
+   ```sh
+   ./scripts/init-template.sh github.com/<you>/my-go-server
+   go mod tidy
+   ```
+
+3. Replace `@gultekinmakif` in [.github/CODEOWNERS](.github/CODEOWNERS) with your handle, then import the branch-protection ruleset (one-time, per repo):
+
+   ```sh
+   sed -i '' 's/@gultekinmakif/@<your-handle>/' .github/CODEOWNERS
+   gh api --method POST -H "Accept: application/vnd.github+json" \
+     "repos/<you>/<repo>/rulesets" \
+     --input <(jq 'del(.id, .source, .source_type)' .github/rulesets/pr-protection.json)
+   ```
+
+After that, `make docker-up` and you're done.
 
 ## Quick start
 
